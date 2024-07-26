@@ -41,14 +41,16 @@ class DataManager:
                 self.dataset_unzip(self.zip_file_paths)
         return
 
-    def read_dataset(self, normalize=True):
-        datas=tf.keras.utils.image_dataset_from_directory(os.path.join(raw_datas_path,'traffic_Data','DATA'), batch_size=batch_size, image_size=image_size)
+    def read_dataset(self, normalize=True, batch_size=32, image_size=(64,64)):
+        datas=tf.keras.utils.image_dataset_from_directory(os.path.join(self.dataset_folder,'traffic_Data','DATA'), batch_size=batch_size, image_size=image_size)
         if normalize == True:
             datas=datas.map(lambda x,y:(x/255,y))
         self.datas = datas
         return datas
     
-    def data_split(train_percent, test_percent):
+    def data_split(self, train_percent, test_percent):
+        datas = self.read_dataset()
+        
         train_size=int(train_percent*len(datas))
         test_size=int(test_percent*len(datas))
         validation_size=len(datas)-train_size-test_size
@@ -56,3 +58,5 @@ class DataManager:
         train_datas=datas.take(train_size)
         test_datas=datas.skip(train_size).take(test_size)
         validation_datas=datas.skip(train_size + test_size).take(validation_size)
+
+        return train_datas, test_datas, validation_datas

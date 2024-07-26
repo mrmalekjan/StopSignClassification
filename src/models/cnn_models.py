@@ -1,6 +1,7 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout
 
+
 def CNN_model_1(input_shape = (64,64,3), num_classes=58):
     
     model = Sequential()
